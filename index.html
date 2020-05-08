@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <title>Escape Room!!</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <style>
+      body { margin: 0; }
+      canvas { width: 100%; height: 100%; };
+      #blocker {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color:rgba(0,0,0,0.5);
+      }
+      #instructions {
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
+
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
+
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+
+        color: #ffffff;
+        text-align: center;
+        font-family: fantasy;
+        font-size: 14px;
+        line-height: 24px;
+
+        cursor: pointer;
+      }
+	  #win {
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
+
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
+
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+
+        color: #ffffff;
+        text-align: center;
+        font-family: fantasy;
+        font-size: 14px;
+        line-height: 24px;
+
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+	<!--img scr = "images/Target.png" alt = Crosshairs-->
+    <div id="blocker">
+
+      <div id="instructions">
+        <span style="font-size:36px">Click in the center of the screen to play!</span>
+        <br /><br />
+        <span style="font-size:24px">Move: ARROW KEYS</span>
+        <br />
+        <span style="font-size:24px">Look: MOUSE</span>
+        <br />
+        <span style="font-size:24px">Pick up an object: MOUSE CLICK</span>
+        <br />
+        <span style="font-size:24px">Drop an object: D key</span>
+        <br />
+        <span style="font-size:24px">Exit: ESC</span>
+	  </div>
+	  <div id = "win">
+		<span style="font-size:36px">You've escaped the room!</span>
+        <br /><br />
+        <span style="font-size:24px">Press R to replay the game</span>
+      </div>
+	   <style>
+      body { margin: 0; }
+      canvas { width: 100%; height: 100%; };
+    </style>
+  </body>
+
+  </head>
+
+  <body>
+    <script src="common_threejs/three.js"></script>
+    <script src="common_threejs/three.module.js"></script>
+    <script src="common_threejs/PointerLockControls.js"></script>
+	  <script src="common_threejs/GLTFLoader.js"></script>
+    <script src="common_threejs/Audio.js"></script>
+    <script src="common_threejs/AudioLoader.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
