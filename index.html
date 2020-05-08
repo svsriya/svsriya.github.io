@@ -39,6 +39,33 @@
 
         cursor: pointer;
       }
+	  #set-clock {
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
+
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
+
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+
+        color: #ffffff;
+        text-align: center;
+        font-family: fantasy;
+        font-size: 24px;
+        line-height: 24px;
+
+        cursor: pointer;
+      }
 	  #win {
         width: 100%;
         height: 100%;
@@ -85,10 +112,21 @@
         <br />
         <span style="font-size:24px">Exit: ESC</span>
 	  </div>
+	  <div id = "set-clock">
+		<span style="font-size:36px">Enter a time</span>
+		<br /><br />
+        <span style="font-size:20px">Press ESC to exit</span>
+        <br /><br />
+        <input id="time1" type="textbox" maxlength = "2" size = "1"/><span style="font-size:24px"> : </span><input id="time2" type="textbox" maxlength = "2" size = "1"/>
+		<br /><br />
+		<input id="button" type="button" value = "SET TIME"/>
+		<br /><br />
+        <span id = "incorrect" style="visibility: hidden; font-size:20px">Incorrect value. Try again using the clues in the room.</span>
+      </div>
 	  <div id = "win">
 		<span style="font-size:36px">You've escaped the room!</span>
         <br /><br />
-        <span style="font-size:24px">Press R to replay the game</span>
+        <span style="font-size:24px">Thanks for playing</span>
       </div>
 	   <style>
       body { margin: 0; }
