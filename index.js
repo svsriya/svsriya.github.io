@@ -8,6 +8,8 @@ var moveBack = false;
 var moveRight = false;
 var moveLeft = false;
 var mouse = new THREE.Vector2();
+var manager = new THREE.LoadingManager();
+var loadingDone = false;
 // interactive objects
 var interactObjs = [];
 var lamp;
@@ -82,11 +84,32 @@ function init()
   controls = new THREE.PointerLockControls( camera, document.body );
 
   var blocker = document.getElementById('blocker');
+  var loadingscreen = document.getElementById('loading-screen');
   var instructions = document.getElementById('instructions');
   var clock_button = document.getElementById('button');
   var time1 = document.getElementById('time1');
   var time2 = document.getElementById('time2');
   var incorrect = document.getElementById('incorrect');
+
+  // initial display is only the instructions
+  loadingscreen.style.display = 'none';
+  winScreen.style.display = 'none';
+  clockScreen.style.display = 'none';
+  scene.visible = false;
+
+  manager.onStart = function(){
+    console.log( 'Started loading files.');
+    loadingscreen.style.display = '';
+  };
+  manager.onProgress = function(){
+    console.log( 'Loading file.' );
+    loadingscreen.style.display = '';
+  };
+  manager.onLoad = function(){
+    console.log( 'Loading complete!' );
+    loadingscreen.style.display = 'none';
+    loadingDone = true;
+  };
 
   instructions.addEventListener( 'click', function(){
     controls.lock();
@@ -105,7 +128,8 @@ function init()
   });
 
   controls.addEventListener( 'lock', function(){
-    if (!winner && !clocking){
+    if (!winner && !clocking && loadingDone ){
+    loadingscreen.style.display = 'none';
 		instructions.style.display = 'none';
 		blocker.style.display = 'none';
 		winScreen.style.display = 'none';
@@ -116,7 +140,8 @@ function init()
   });
 
   controls.addEventListener( 'unlock', function(){
-	if (!winner && !clocking){
+	if (!winner && !clocking && loadingDone){
+    loadingscreen.style.display = 'none';
 		blocker.style.display = 'block';
 		instructions.style.display = '';
 		winScreen.style.display = 'none';
@@ -175,6 +200,7 @@ function init()
         {
           // set object to its original location
           camera.remove(pickedUpObject);
+          //pickedUpObject.scale.set(2,2,2);
           pickedUpObject.position.set(objOgLocation.x, objOgLocation.y, objOgLocation.z);
           scene.add(pickedUpObject);
           console.log(pickedUpObject.position);
@@ -306,7 +332,7 @@ function init()
   scene.add( light5 );
 
   // symbols painting
-  var loader = new THREE.GLTFLoader();
+  var loader = new THREE.GLTFLoader(manager);
   loader.load('./models/symbols_painting/scene.gltf', function(gltf){
     var symbolPainting = new THREE.Object3D();
     symbolPainting = gltf.scene;
@@ -351,61 +377,78 @@ function init()
 
   // book table
   var bookTable = new THREE.Object3D();
-  loader.load('./models/table/scene.gltf', function(gltf){
+  loader.load('./models/lowpolytable/scene.gltf', function(gltf){
     bookTable = gltf.scene;
-    bookTable.position.set(9,-5,0);
-    bookTable.scale.set(3, 3, 3);
+    bookTable.position.set(-8,-5,-15);
+    bookTable.scale.set(0.5, 0.5, 0.5);
     bookTable.rotation.y = Math.PI/2;
     scene.add(bookTable);
   });
 
   // symbolBook + lightBook
   loader.load('./models/book/scene.gltf', function(gltf){
+      // symbol book
       var symbolBook = new THREE.Object3D();
       symbolBook = gltf.scene;
       symbolBook.scale.set(0.3,0.3,0.3);
-      symbolBook.position.set(9, -2.5, 0);
-      symbolBook.rotation.y = Math.PI/2;
+      symbolBook.position.set(-9, -2.3, -13);
       symbolBook.name = 'symbolBook';
       scene.add(symbolBook);
       interactObjs.push(symbolBook);
+      // light hint book
       var lightBook = symbolBook.clone();
-      lightBook.position.set(9, -2.5, 2);
+      lightBook.position.set(-7, -2.3, -13);
       lightBook.name = 'lightBook';
       scene.add(lightBook);
       interactObjs.push(lightBook);
-      var finalBook = symbolBook.clone();
       // final book for the order of the digits
-      finalBook.position.set(10, -2.5, 0);
+      var finalBook = symbolBook.clone();
+      finalBook.position.set(-9.5, -2.3, -15);
       finalBook.name = 'finalBook';
       scene.add(finalBook);
       interactObjs.push(finalBook);
+      // instruction book
+      var instructionBook = symbolBook.clone();
+      instructionBook.position.set(0,-0.5,-3.5);
+      instructionBook.scale.set(0.5,0.5,0.5);
+      instructionBook.rotation.y = Math.PI;
+      instructionBook.rotation.x = Math.PI/4;
+      instructionBook.name = 'instructionBook';
+      scene.add(instructionBook);
+      interactObjs.push(instructionBook);
   });
 
-
-
-  // instruction book
-  loader.load('./models/fancybook/scene.gltf', function(gltf){
-    var instructionBook = new THREE.Object3D();
-    instructionBook = gltf.scene;
-    instructionBook.position.set(0,-1.7,-2);
-    instructionBook.scale.set(0.4,0.4,0.4);
-    instructionBook.rotation.y = -Math.PI/2;
-    instructionBook.name = 'instructionBook';
-    scene.add(instructionBook);
-    interactObjs.push(instructionBook);
-  });
+  // // instruction book
+  // loader.load('./models/fancybook/scene.gltf', function(gltf){
+  //   var instructionBook = new THREE.Object3D();
+  //   instructionBook = gltf.scene;
+  //   instructionBook.position.set(0,-1.7,-2);
+  //   instructionBook.scale.set(0.4,0.4,0.4);
+  //   instructionBook.rotation.y = -Math.PI/2;
+  //   instructionBook.name = 'instructionBook';
+  //   scene.add(instructionBook);
+  //   interactObjs.push(instructionBook);
+  // });
 
   // round table for instruction book
-  loader.load('./models/roundtable/scene.gltf', function(gltf){
+  loader.load('./models/bookstand/scene.gltf', function(gltf){
     var roundTable = new THREE.Object3D();
     roundTable = gltf.scene;
-    roundTable.position.set(0,-5,-2);
-    roundTable.scale.set(0.25,0.5,0.25);
+    roundTable.position.set(8.5,-19.7,-12);
+    roundTable.scale.set(4,4,4);
+    roundTable.rotation.y = -Math.PI/2;
     scene.add(roundTable);
   });
+  // click here mark
+  var geo = new THREE.PlaneGeometry(1,0.5);
+  var tex = new THREE.TextureLoader().load('./images/click-here.jpg');
+  var mat = new THREE.MeshBasicMaterial( {map: tex, color:0xffffff} );
+  var clickHere = new THREE.Mesh(geo, mat);
+  clickHere.position.set(1,0,-3);
+  //clickHere.rotateY(Math.PI);
+  scene.add(clickHere);
 
-  // bookshelf models 
+  // bookshelf models
   loader.load('./models/swing_bookshelf/bookshelf.gltf', function(gltf){
 	  var bookshelfB = new THREE.Object3D();
 	  bookshelfB = gltf.scene;
@@ -470,6 +513,24 @@ function init()
 	  scene.add(bookshelfB);
   });
 
+  // loader.load('./models/bookshelves/bookshelf_black.gltf', function(gltf){
+	//   var bookshelfB = new THREE.Object3D();
+	//   bookshelfB = gltf.scene;
+	//   bookshelfB.position.set(13.75, -4.5, 7);
+	//   bookshelfB.scale.set(0.65, 0.65, 0.65);
+	//   bookshelfB.rotation.y = -Math.PI / 2;
+	//   scene.add(bookshelfB);
+  // });
+  //
+  // loader.load('./models/bookshelves/bookshelf_black.gltf', function(gltf){
+	//   var bookshelfB = new THREE.Object3D();
+	//   bookshelfB = gltf.scene;
+	//   bookshelfB.position.set(13.75, -4.5, -7);
+	//   bookshelfB.scale.set(0.65, 0.65, 0.65);
+	//   bookshelfB.rotation.y = -Math.PI / 2;
+	//   scene.add(bookshelfB);
+  // });
+
   loader.load("models/door.gltf", function(gltf){
 	  var niceDoor = new THREE.Object3D();
 	  niceDoor = gltf.scene;
@@ -509,9 +570,9 @@ function init()
 	  var clock = new THREE.Object3D();
 	  clock = gltf.scene;
 	  interactObjs.push(clock);
-	  clock.position.set(7.75, -2, -2);
+	  clock.position.set(-8, -2, -15);
 	  clock.scale.set(0.5, 0.5, 0.5);
-	  clock.rotation.y = -Math.PI / 2;
+	  //clock.rotation.y = -Math.PI / 2;
 	  clock.name = 'clock';
 	  scene.add(clock);
   });
@@ -577,11 +638,6 @@ function init()
     soundEffects.push(sound); // 3
   });
 
-  // initial display is only the instructions
-	winScreen.style.display = 'none';
-	clockScreen.style.display = 'none';
-	scene.visible = false;
-
   GameLoop();
 }
 
@@ -625,9 +681,9 @@ function update()
 	var time = performance.now();
     var delta = (time - prevTime) / 1000;
 
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-    velocity.y -= 9.8 * 100.0 * delta;  // 100.0 = mass
+    velocity.x -= velocity.x * 20.0 * delta;
+    velocity.z -= velocity.z * 20.0 * delta;
+    velocity.y -= 20.0 * 100.0 * delta;  // 100.0 = mass
 
     direction.z = Number( moveForward ) - Number( moveBack );
     direction.x = Number( moveRight ) - Number( moveLeft );
@@ -653,7 +709,7 @@ function update()
 			if (intersects.length > 1) {
 				var obj = intersects[0].object;
 				obj = getAncestor(obj);
-				if (obj.name.startsWith('door') && pickedUpObject.name.startsWith('Torus_1')){
+				if (obj.name.startsWith('door') && pickedUpObject.name.startsWith('niceKey')){
 					win();
 				}
 			}
@@ -767,22 +823,22 @@ function update()
 		 }
    }
       // logic for picking up objects
-			for ( var i = 0; i < intersects.length; i++ ) {
+			//for ( var i = 0; i < intersects.length; i++ ) {
         // check if the object in the raycaster is pickupable, and if so pick it up
-        if( containsObj(getAncestor(intersects[i].object), pickupable) )
+        if( intersects.length > 0 && containsObj(getAncestor(intersects[0].object), pickupable) )
         {
           // save the original location of object so user drops in the original place if they want to drop an object
-          objOgLocation.x = getAncestor(intersects[i].object).position.x;
-          objOgLocation.y = getAncestor(intersects[i].object).position.y;
-          objOgLocation.z = getAncestor(intersects[i].object).position.z;
+          objOgLocation.x = getAncestor(intersects[0].object).position.x;
+          objOgLocation.y = getAncestor(intersects[0].object).position.y;
+          objOgLocation.z = getAncestor(intersects[0].object).position.z;
   				// intersects[i].object.position.y = camera.position.y;
           // add to camera to simulate picking up
-  				camera.add(getAncestor(intersects[i].object));
-  				getAncestor(intersects[i].object).position.set(2,-2,-5);
-				pickedUpObject = intersects[0].object;
-				console.log(pickedUpObject.name);
-				pickedUp = true;
-        }
+  				camera.add(getAncestor(intersects[0].object));
+  				getAncestor(intersects[0].object).position.set(2,-1,-2);
+				  pickedUpObject = getAncestor(intersects[0].object);
+				  console.log(pickedUpObject.position);
+			    pickedUp = true;
+        //}
         //console.log('intersect object position' + intersects[i].object.position);
 			}
 
@@ -802,8 +858,8 @@ function keyDrop (){
   loader.load('./models/low-poly-key.gltf', function(gltf){
 	  var niceKey = new THREE.Object3D();
 	  niceKey = gltf.scene;
-	  niceKey.scale.set(0.005, 0.005, 0.005);
-	  niceKey.position.set(6, -4, 1);
+	  niceKey.scale.set(0.01, 0.01, 0.01);
+	  niceKey.position.set(-6, -1.5, -15);
 	  scene.add(niceKey);
 	  niceKey.name = 'niceKey';
 	  interactObjs.push(niceKey);

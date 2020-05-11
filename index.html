@@ -10,7 +10,34 @@
         position: absolute;
         width: 100%;
         height: 100%;
-        background-color:rgba(0,0,0,0.5);
+        background-color:rgba(0,0,0,0.1);
+      }
+      #loading-screen {
+        width: 100%;
+        height: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
+
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
+
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+
+        color: #ffffff;
+        text-align: center;
+        font-family: fantasy;
+        font-size: 14px;
+        line-height: 24px;
+
+        cursor: pointer;
       }
       #instructions {
         width: 100%;
@@ -99,8 +126,13 @@
 	<!--img scr = "images/Target.png" alt = Crosshairs-->
     <div id="blocker">
 
+      <div id="loading-screen">
+        <span style="font-size:36px">Loading, please wait...</span>
+        <br />
+        <span style="font-size:20px">For best performance, use Google Chrome</span>
+      </div>
       <div id="instructions">
-        <span style="font-size:36px">Click in the center of the screen to play!</span>
+        <span style="font-size:36px">Click the screen to play!</span>
         <br /><br />
         <span style="font-size:24px">Move: ARROW KEYS</span>
         <br />
